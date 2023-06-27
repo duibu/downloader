@@ -45,8 +45,8 @@ if __name__ == '__main__':
 
         def merge():
             pbar.close()
-            tsToMp4(tsfilepath = filepath, outputname = name, outputpath = path)
-            # tsToMp4forffmpeg(tsfilepath = filepath, outputname = name, outputpath = path)
+            # tsToMp4(tsfilepath = filepath, outputname = name, outputpath = path)
+            tsToMp4forffmpeg(tsfilepath = filepath, outputname = name, outputpath = path)
 
         def pbarUp():
             pbar.update(1)
@@ -57,7 +57,7 @@ if __name__ == '__main__':
         countlen = numlen(json_data['count'])
 
         if thread_num is not None and thread_num > 1:
-            thread_down = thread(num_threads = thread_num, done_callback = merge)
+            thread_down = thread(num_threads = thread_num)
             for s in seg:
                 thread_down.downloadts(s['url'], s['key'], s['iv'], numformat(s['index'], countlen), s['method'], filepath, pbarUp())
             thread_down.wait_completion()

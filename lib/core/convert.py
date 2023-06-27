@@ -2,6 +2,7 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips
 import ffmpeg
 import glob
 import os
+import subprocess
 
 
 def tsToMp4(tsfilepath, outputname, outputpath):
@@ -10,36 +11,28 @@ def tsToMp4(tsfilepath, outputname, outputpath):
     clips = [VideoFileClip(os.path.join(tsfilepath, f)) for f in ts_files]
 
     # 将所有的 VideoFileClip 对象连接成一个片段，并写入 MP4 文件
-    final_clip = concatenate_videoclips(clips)
-    final_clip.write_videofile(outputpath + outputname)
+    try:
+        final_clip = concatenate_videoclips(clips)
+        final_clip.write_videofile(outputpath + outputname)
+    except Exception as e:
+        print(e)
+    finally:
+        final_clip.close()
 
 def tsToMp4forffmpeg(tsfilepath, outputpath, outputname):
-    # ts_files = sorted([f for f in os.listdir(tsfilepath) if f.endswith('.ts')])
-    ts_files = sorted(glob.glob(tsfilepath+'*.ts')) 
-    # input_args = ffmpeg.input(ts_files[0])
-    # for ts_file in ts_files[1:]:
-    #     input_args = input_args.input(ts_file)
-    # # 创建输出命令
-    # output_args = ffmpeg.output(input_args, outputname, vcodec='copy', acodec='copy')
-    # # 执行命令
-    # ffmpeg.run(output_args)
-    try:
-        input_args = ffmpeg.input(ts_files[0])
-    except ValueError as e:
-        print(f"无法设置输入流：{e}")
-        return
-    
-    for ts_file in ts_files[1:]:
-        try:
-            input_args = input_args.concat(ffmpeg.input(ts_file), n=len(ts_files))
-        except ValueError as e:
-            print(f"无法添加输入文件 {ts_file}：{e}")
-            continue
-    
-    # 设置 ffmpeg 输出流(.mp4 文件)
-    output_args = ffmpeg.output(input_args, outputpath + outputname, c="copy", bsf="a")
-    print(output_args.get_args()) # 调试信息
-    output_args.run()
+    print(tsfilepath, outputpath, outputname)
+    ts_files = sorted([f for f in os.listdir(tsfilepath) if f.endswith('.ts')])
+    print(ts_files)
+    ts_files = [os.path.join(tsfilepath, f) for f in ts_files]
+    print(ts_files)
+    with open('ts_files.txt', 'w') as f:
+        for ts_file in ts_files:
+            f.write("file '{}'\n".format(ts_file))
+    # 使用FFmpeg将TS文件合并为MP4文件
+    subprocess.call(['ffmpeg', '-f', 'concat', '-safe', '0', '-i', 'ts_files.txt', '-c', 'copy', outputpath + outputname])
+
+    # 删除临时的TS文件列表文件
+    # os.remove('ts_files.txt')
 
 def getUnicode(value, encoding=None, noneToNull=False):
     """
