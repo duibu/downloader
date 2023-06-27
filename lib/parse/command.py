@@ -22,7 +22,9 @@ def cmdLineParser(argv=None):
 
     try:
         parser.add_argument("-u", "--url", dest="url", required=True,
-            help="Target URL (e.g. \"http://www.site.com/vuln.php?id=1\")")
+            help="Target URL (e.g. \"http://xxx.com/123.m3u8?sign=xxxx\")")
+        parser.add_argument("-t", "--thread", dest="thread", type = int, default = 1,
+            help="Target URL (e.g. \"5\")")
         parser.add_argument("-name", "--video-name", dest="name",
             help="Video name (e.g. \"001.mp4\")")
         parser.add_argument("-path", "--save-path", dest="path",
