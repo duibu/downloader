@@ -3,13 +3,14 @@ import base64
 from Crypto.Cipher import AES
 from Crypto.Util import Padding
 from lib.core.log import logger
+from lib.request.httprequest import request
 
 from lib.parse.m3u8Parse import getM3u8KeyUri
 from lib.core.files import newdir
 
 def downloadm3u8(url):
     logger.info('获取m3u8流信息')
-    resp = requests.get(url)
+    resp = request(url)
     if resp.status_code == 200:
         m3u8_content = resp.text
     # print(m3u8_content)
@@ -18,7 +19,7 @@ def downloadm3u8(url):
 
 def getm3u8key(url):
     logger.info('获取Key')
-    resp = requests.get(url)
+    resp = request(url)
     if resp.status_code == 200:
         key = base64.b64encode(resp.content).decode('utf-8')
         return key
@@ -26,7 +27,7 @@ def getm3u8key(url):
 
 def downloadM3u8Ts(url, key, iv, name, method, filepath):
     newdir(filepath)
-    response = requests.get(url)
+    response = request(url)
     # decrypt ts stream
     cipher = AES.new(base64.b64decode(key), AES.MODE_CBC, IV=bytes.fromhex(base64.b64decode(iv).hex()[:32]))
     decrypted_content = cipher.decrypt(response.content)

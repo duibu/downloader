@@ -1,5 +1,6 @@
 
 import os
+import platform
 import sys
 
 VERSION = "VERSION: 1.0.0"
@@ -23,5 +24,9 @@ BANNER = """\033[01;33m\
 
 
 PLATFORM = os.name
+OS_NAME = platform.system()
 PYVERSION = sys.version.split()[0]
 IS_WIN = PLATFORM == "nt"
+IS_LINUX = OS_NAME == "Linux"
+
+ABS_PATH = os.path.dirname(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))

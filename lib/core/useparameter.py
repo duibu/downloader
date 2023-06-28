@@ -1,6 +1,13 @@
 
 def getTmpPath(path, name):
-    return path + '/___' + name + '_tmp/'
+    result = path
+    if path.endswith('/'):
+        print(1)
+        result = path + '__' + name + '_tmp__/'
+    else:
+        print(2)
+        result = path + '/__' + name + '_tmp__/'
+    return result
 
 
 def numlen(num):

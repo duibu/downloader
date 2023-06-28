@@ -1,8 +1,7 @@
 from moviepy.editor import VideoFileClip, concatenate_videoclips
-import ffmpeg
-import glob
 import os
-import subprocess
+from lib.core.ffmpeg import merge
+from lib.core.log import logger
 
 
 def tsToMp4(tsfilepath, outputname, outputpath):
@@ -20,19 +19,11 @@ def tsToMp4(tsfilepath, outputname, outputpath):
         final_clip.close()
 
 def tsToMp4forffmpeg(tsfilepath, outputpath, outputname):
-    print(tsfilepath, outputpath, outputname)
     ts_files = sorted([f for f in os.listdir(tsfilepath) if f.endswith('.ts')])
-    print(ts_files)
-    ts_files = [os.path.join(tsfilepath, f) for f in ts_files]
-    print(ts_files)
-    with open('ts_files.txt', 'w') as f:
-        for ts_file in ts_files:
-            f.write("file '{}'\n".format(ts_file))
-    # 使用FFmpeg将TS文件合并为MP4文件
-    subprocess.call(['ffmpeg', '-f', 'concat', '-safe', '0', '-i', 'ts_files.txt', '-c', 'copy', outputpath + outputname])
+    logger.info('The FFMPEG conversion begins ......')
+    merge(ts_files, tsfilepath, "MP4", True, outputpath + outputname)
 
-    # 删除临时的TS文件列表文件
-    # os.remove('ts_files.txt')
+# tsToMp4forffmpeg('d:/code/python/test/___2323232.mp4_tmp/', 'd:/code/python/test/', '232322232332.mp4')
 
 def getUnicode(value, encoding=None, noneToNull=False):
     """

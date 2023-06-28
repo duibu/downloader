@@ -18,6 +18,8 @@ from tqdm import tqdm
 import multiprocessing
 
 import json
+import os
+
 
 
 if __name__ == '__main__':
@@ -29,7 +31,7 @@ if __name__ == '__main__':
     args = cmdLineParser()
     url = args.url
     name = args.name
-    path = args.path
+    path = args.path if args.path.endswith('/') else args.path + '/'
     thread_num = int(args.thread)
     video_type = parseType(args.url)
     if video_type == 'm3u8':
@@ -47,6 +49,7 @@ if __name__ == '__main__':
             pbar.close()
             # tsToMp4(tsfilepath = filepath, outputname = name, outputpath = path)
             tsToMp4forffmpeg(tsfilepath = filepath, outputname = name, outputpath = path)
+            logger.info('The download is complete')
 
         def pbarUp():
             pbar.update(1)
@@ -67,4 +70,3 @@ if __name__ == '__main__':
                 pbar.update(1)
             merge()
     
-        
