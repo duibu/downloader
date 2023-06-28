@@ -34,6 +34,7 @@ if __name__ == '__main__':
     path = args.path if args.path.endswith('/') else args.path + '/'
     thread_num = int(args.thread)
     video_type = parseType(args.url)
+    logger.info(f"开始解析 -> \033[01;33m{args.url}\033[0m\n")
     if video_type == 'm3u8':
         baseUrl = getm3u8BaseUrl(url)
         m3u8_ori_content = downloadm3u8(url)
