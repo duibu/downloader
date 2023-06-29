@@ -2,11 +2,12 @@ import requests
 import urllib.request
 
 def request(url):
-    proxies = {
-        "http": None,
-        "https": None
-    }
-    return requests.get(url, proxies = proxies)
+    if url is not None and url != '':
+        proxies = {
+            "http": None,
+            "https": None
+        }
+        return requests.get(url, proxies = proxies)
 
 
 def is_enable_proxy():

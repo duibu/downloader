@@ -28,16 +28,16 @@ class Logger:
         self.logger.debug(msg)
 
     def info(self, msg):
-        self.logger.info(msg)
+        self.logger.info(f"\033[32m{msg}\033[0m")
 
     def warning(self, msg):
-        self.logger.warning(msg)
+        self.logger.warning(f"\033[01;33m{msg}\033[0m")
 
     def error(self, msg):
-        self.logger.error(msg)
+        self.logger.error(f"\033[01;91m{msg}\033[0m")
 
     def critical(self, msg):
-        self.logger.critical(msg)
+        self.logger.critical(f"\033[31m\033[1m{msg}\033[0m")
 
 
 logger = Logger()

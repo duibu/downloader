@@ -21,14 +21,21 @@ def cmdLineParser(argv=None):
     parser = ArgumentParser(usage=usage)
 
     try:
-        parser.add_argument("-u", "--url", dest="url", required=True,
+        parser.add_argument("-u", "--url", dest="url",
             help="Target URL (e.g. \"http://xxx.com/123.m3u8?sign=xxxx\")")
+
         parser.add_argument("-t", "--thread", dest="thread", type = int, default = 1,
-            help="Target URL (e.g. \"5\")")
+            help="Thread number  (e.g. \"5\")")
+
         parser.add_argument("-name", "--video-name", dest="name",
             help="Video name (e.g. \"001.mp4\")")
+
         parser.add_argument("-path", "--save-path", dest="path",
             help="The path where the video is saved (e.g. \"win: C:/user/video linux or mac: /user/download/video\")")
+
+        parser.add_argument("--batch-file", dest="batch_file_path",
+            help="The url file (e.g. \"win: C:/user/video/down.txt linux or mac: /user/download/video/down.csv\")")
+
         args = parser.parse_args()
         return args
     except Exception as e:

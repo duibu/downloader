@@ -1,16 +1,21 @@
 import re
 import json
 import base64
+import sys
 
 from lib.core.files import writeTextFile
 from lib.core.log import logger
 
 def getM3u8KeyUri(m3u8_content):
     pattern = r'#EXT-X-KEY:(METHOD=[^,]+),URI="([^"]+)"(?:,IV=([0-9A-Fa-f]+))?'
-    match = re.search(pattern, m3u8_content)
-    if match:
-        key_uri = match.group(2)
-        return key_uri
+    try:
+        match = re.search(pattern, m3u8_content)
+        if match:
+            key_uri = match.group(2)
+            return key_uri
+    except TypeError as te:
+        logger.error('请检查链接是否正确')
+        sys.exit(0)
 
 
 def getM3u8Method(m3u8_content):
@@ -35,7 +40,7 @@ def getM3u8Iv(m3u8_content):
 
         return base64.b64encode(iv).decode('utf-8')
 
-def m3u8ToJson(baseUrl, m3u8_content, key):
+def m3u8ToJson(baseUrl, m3u8_content, key = ''):
     iv = getM3u8Iv(m3u8_content)
     method = getM3u8Method(m3u8_content)
     lines = m3u8_content.split("\n")

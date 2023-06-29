@@ -4,6 +4,9 @@ def urlresolution(url):
     parsed_url = urlparse(url)
     return parsed_url
 
+def url_path(url):
+    parsed_url = urlresolution(url)
+    return parsed_url.path
 
 def queryParamsParse(url):
     parsed_url = urlresolution(url)

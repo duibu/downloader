@@ -1,73 +1,61 @@
 from lib.core.common import banner
 from lib.parse.command import cmdLineParser
-from lib.parse.typeParse import parseType
-from lib.core.m3u8download import downloadm3u8
-from lib.core.m3u8download import getm3u8key
-from lib.core.m3u8download import downloadM3u8Ts
-from lib.parse.m3u8Parse import m3u8ToJson
-from lib.parse.m3u8Parse import getM3u8KeyUri
-from lib.parse.urlParse import getm3u8BaseUrl
 from lib.core.log import logger
-from lib.core.convert import tsToMp4
-from lib.core.convert import tsToMp4forffmpeg
-from lib.core.useparameter import getTmpPath
-from lib.core.useparameter import numlen
-from lib.core.useparameter import numformat
-from lib.core.threads import thread
+from lib.parse.typeParse import parseType
 from tqdm import tqdm
-import multiprocessing
+from lib.core.download import download_m3u8_video
+from lib.core.files import file_exists
+from lib.core.files import file_is_txt
+from lib.core.files import file_is_csv
+from lib.core.files import read_csv
+from lib.core.files import read_txt
 
 import json
 import os
 
-
-
-if __name__ == '__main__':
-    count = multiprocessing.Value('i', 0)
-    def increment_count():
-        with count.get_lock():
-            count.value += 1
+def main():
     banner()
     args = cmdLineParser()
     url = args.url
-    name = args.name
-    path = args.path if args.path.endswith('/') else args.path + '/'
+    video_name = args.name
+    video_save_path = args.path if args.path.endswith('/') else args.path + '/'
     thread_num = int(args.thread)
-    video_type = parseType(args.url)
-    logger.info(f"开始解析 -> \033[01;33m{args.url}\033[0m\n")
+    batch_file_path = args.batch_file_path
+    if (url is None or url == '') and (batch_file_path is None or batch_file_path == ''):
+        logger.error("")
+    if batch_file_path is not None and batch_file_path != '':
+        batch_download(batch_file_path, video_save_path, thread_num)
+    else:
+        singleDownload(url,video_save_path,thread_num,video_name)
+
+def singleDownload(url, video_save_path, thread_num, video_name = None):
+    logger.info(f"开始解析 -> {url}")
+    video_type = parseType(url)
     if video_type == 'm3u8':
-        baseUrl = getm3u8BaseUrl(url)
-        m3u8_ori_content = downloadm3u8(url)
-        key_uri = getM3u8KeyUri(m3u8_ori_content)
-        key = getm3u8key(key_uri)
-        m3u8Json = m3u8ToJson(baseUrl, m3u8_ori_content, key)
-        json_data = json.loads(m3u8Json)
-        seg = json_data['segments']
-        pbar = tqdm(total=len(seg))
-        filepath = getTmpPath(path, name)
+        download_m3u8_video(url=url, video_save_path = video_save_path, video_name=video_name,thread_num=thread_num)
 
-        def merge():
-            pbar.close()
-            # tsToMp4(tsfilepath = filepath, outputname = name, outputpath = path)
-            tsToMp4forffmpeg(tsfilepath = filepath, outputname = name, outputpath = path)
-            logger.info('The download is complete')
+def batch_download(batch_file_path, video_save_path, thread_num):
+    if file_exists(batch_file_path):
+        logger.info(f"开始读取文件 -> {batch_file_path}")
+        if file_is_txt(batch_file_path):
+            url_list = read_txt(batch_file_path)
+            for u in url_list:
+                singleDownload(url=u, video_save_path=video_save_path, thread_num=thread_num)
+        elif file_is_csv(batch_file_path):
+            url_map = read_csv(batch_file_path)
+            for u in url_map:
+                singleDownload(url=u['url'], video_save_path=video_save_path, thread_num=thread_num, video_name = u['name'])
 
-        def pbarUp():
-            pbar.update(1)
-            increment_count()
-            if count.value == json_data['count']:
-                merge()
+    else:
+        logger.error(f"文件 [{batch_file_path}]不存在，请确认--batch-file参数是否正确或者文件是否存在！")
+        
 
-        countlen = numlen(json_data['count'])
 
-        if thread_num is not None and thread_num > 1:
-            thread_down = thread(num_threads = thread_num)
-            for s in seg:
-                thread_down.downloadts(s['url'], s['key'], s['iv'], numformat(s['index'], countlen), s['method'], filepath, pbarUp())
-            thread_down.wait_completion()
-        else:
-            for s in seg:
-                downloadM3u8Ts(s['url'], s['key'], s['iv'], numformat(s['index'], countlen), s['method'], filepath)
-                pbar.update(1)
-            merge()
-    
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        pass
+    except SystemExit:
+        raise

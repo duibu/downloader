@@ -15,6 +15,8 @@ def downloadm3u8(url):
         m3u8_content = resp.text
     # print(m3u8_content)
         return m3u8_content
+    # else:
+    #     return resp
 
 
 def getm3u8key(url):
@@ -29,8 +31,11 @@ def downloadM3u8Ts(url, key, iv, name, method, filepath):
     newdir(filepath)
     response = request(url)
     # decrypt ts stream
-    cipher = AES.new(base64.b64decode(key), AES.MODE_CBC, IV=bytes.fromhex(base64.b64decode(iv).hex()[:32]))
-    decrypted_content = cipher.decrypt(response.content)
+    if key is not None and key != '':
+        cipher = AES.new(base64.b64decode(key), AES.MODE_CBC, IV=bytes.fromhex(base64.b64decode(iv).hex()[:32]))
+        decrypted_content = cipher.decrypt(response.content)
+    else:
+        decrypted_content = response.content
     # unpadded_plaintext = Padding.unpad(decrypted_content, AES.block_size, style='pkcs7')
     with open(filepath + str(name) + '.ts', 'wb') as f:
         f.write(decrypted_content)
