@@ -30,6 +30,9 @@ def cmdLineParser(argv=None):
         parser.add_argument("-name", "--video-name", dest="name",
             help="Video name (e.g. \"001.mp4\")")
 
+        parser.add_argument("-site", "--site-type", dest="site_type",
+            help="web size type (e.g. \"bili\" \"youtube\" )")
+
         parser.add_argument("-path", "--save-path", dest="path",
             help="The path where the video is saved (e.g. \"win: C:/user/video linux or mac: /user/download/video\")")
 
