@@ -13,10 +13,13 @@ from lib.core.useparameter import numlen
 from lib.core.useparameter import numformat
 from lib.core.threads import thread
 from lib.core.files import del_dir_not_empty
+from lib.request.httprequest import request
 from tqdm import tqdm
 import multiprocessing
 import json
 from datetime import datetime
+import re
+from bs4 import BeautifulSoup
 
 def download_m3u8_video(url, video_save_path, video_name,thread_num):
     
@@ -66,3 +69,23 @@ def download_m3u8_video(url, video_save_path, video_name,thread_num):
             downloadM3u8Ts(s['url'], s['key'], s['iv'], numformat(s['index'], countlen), s['method'], filepath)
             pbar.update(1)
         merge()
+
+
+def download_bili(url, video_save_path, video_name,thread_num):
+    resp = request(url)
+    # print(resp.text)
+    html = resp.text.replace("\n", "")
+
+    soup = BeautifulSoup(html, 'html.parser')
+
+    # 找到所有的<script>标签
+    script_tags = soup.find_all('script')
+
+    # 遍历每个<script>标签并打印脚本内容
+    for script_tag in script_tags:
+        script_content = script_tag.get_text()
+
+        if script_content.startswith('window.__playinfo__'):
+            script_content = script_content.replace('window.__playinfo__=','')
+            json_data = json.loads(script_content)
+            print(json_data['data'])

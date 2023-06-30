@@ -4,6 +4,7 @@ from lib.core.log import logger
 from lib.parse.typeParse import parseType
 from tqdm import tqdm
 from lib.core.download import download_m3u8_video
+from lib.core.download import download_bili
 from lib.core.files import file_exists
 from lib.core.files import file_is_txt
 from lib.core.files import file_is_csv
@@ -21,6 +22,8 @@ def main():
     video_save_path = args.path if args.path.endswith('/') else args.path + '/'
     thread_num = int(args.thread)
     batch_file_path = args.batch_file_path
+    site_type = args.site_type
+
     if (url is None or url == '') and (batch_file_path is None or batch_file_path == ''):
         logger.error("")
     if batch_file_path is not None and batch_file_path != '':
@@ -33,6 +36,9 @@ def singleDownload(url, video_save_path, thread_num, video_name = None):
     video_type = parseType(url)
     if video_type == 'm3u8':
         download_m3u8_video(url=url, video_save_path = video_save_path, video_name=video_name,thread_num=thread_num)
+        return
+    else: 
+        logger.error('下载地址有误，请核对')
 
 def batch_download(batch_file_path, video_save_path, thread_num):
     if file_exists(batch_file_path):

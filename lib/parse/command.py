@@ -33,7 +33,7 @@ def cmdLineParser(argv=None):
         parser.add_argument("-site", "--site-type", dest="site_type",
             help="web size type (e.g. \"bili\" \"youtube\" )")
 
-        parser.add_argument("-path", "--save-path", dest="path",
+        parser.add_argument("-path", "--save-path", dest="path", default = './',
             help="The path where the video is saved (e.g. \"win: C:/user/video linux or mac: /user/download/video\")")
 
         parser.add_argument("--batch-file", dest="batch_file_path",

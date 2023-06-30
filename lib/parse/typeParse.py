@@ -1,5 +1,6 @@
 from lib.parse.urlParse import urlresolution
 from lib.core.log import logger
+from lib.request.httprequest import requests
 
 def parseType(url):
     parsed_url = urlresolution(url)
