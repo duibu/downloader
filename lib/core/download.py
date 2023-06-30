@@ -14,12 +14,14 @@ from lib.core.useparameter import numformat
 from lib.core.threads import thread
 from lib.core.files import del_dir_not_empty
 from lib.request.httprequest import request
+from bs4 import BeautifulSoup
 from tqdm import tqdm
+import inquirer
 import multiprocessing
 import json
 from datetime import datetime
 import re
-from bs4 import BeautifulSoup
+
 
 def download_m3u8_video(url, video_save_path, video_name,thread_num):
     
@@ -81,11 +83,20 @@ def download_bili(url, video_save_path, video_name,thread_num):
     # 找到所有的<script>标签
     script_tags = soup.find_all('script')
 
+    html = ''
+
     # 遍历每个<script>标签并打印脚本内容
     for script_tag in script_tags:
         script_content = script_tag.get_text()
 
         if script_content.startswith('window.__playinfo__'):
-            script_content = script_content.replace('window.__playinfo__=','')
-            json_data = json.loads(script_content)
-            print(json_data['data'])
+            html = script_content.replace('window.__playinfo__=','')
+            break
+    
+    logger.debug(json.loads(html))
+    questions = [
+        inquirer.Text('name', message='请输入你的名字')
+    ]
+    
+    answers = inquirer.prompt(questions)
+    logger.debug(answers['name'])

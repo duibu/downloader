@@ -23,6 +23,9 @@ def main():
     thread_num = int(args.thread)
     batch_file_path = args.batch_file_path
     site_type = args.site_type
+    # if site_type == 'bili':
+    #     download_bili(url=url, video_save_path = video_save_path, video_name=video_name,thread_num=thread_num)
+    #     return
 
     if (url is None or url == '') and (batch_file_path is None or batch_file_path == ''):
         logger.error("")

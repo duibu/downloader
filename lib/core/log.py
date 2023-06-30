@@ -25,7 +25,7 @@ class Logger:
         return cls._instance
 
     def debug(self, msg):
-        self.logger.debug(msg)
+        self.logger.debug(f"\033[36m{msg}\033[0m")
 
     def info(self, msg):
         self.logger.info(f"\033[32m{msg}\033[0m")

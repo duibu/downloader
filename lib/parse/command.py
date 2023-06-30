@@ -39,6 +39,12 @@ def cmdLineParser(argv=None):
         parser.add_argument("--batch-file", dest="batch_file_path",
             help="The url file (e.g. \"win: C:/user/video/down.txt linux or mac: /user/download/video/down.csv\")")
 
+        parser.add_argument("--cookie", dest="http_cookie",
+            help="http request cookie header. (e.g. \"xxx:xxx;xxx:xxx\")")
+
+        parser.add_argument("--browser", dest="browser_type",
+            help="The local browser where cookies are logged. (e.g. \"chrome of firefox\")")
+
         args = parser.parse_args()
         return args
     except Exception as e:
