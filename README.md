@@ -26,7 +26,6 @@ pip install -r requirements.txt
 -path/--save-path: 视频保存路径
 --batch-file: 批量地址文件的绝对路径，批量下载时使用，支持csv和txt
 -t/--thread: 下载视频文件的线程数
--site/--site-type: 网站类型
 ```
 
 ## 使用示例
