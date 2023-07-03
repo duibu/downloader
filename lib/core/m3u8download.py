@@ -13,10 +13,7 @@ def downloadm3u8(url):
     resp = request(url)
     if resp.status_code == 200:
         m3u8_content = resp.text
-    # print(m3u8_content)
         return m3u8_content
-    # else:
-    #     return resp
 
 
 def getm3u8key(url):

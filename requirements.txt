@@ -3,3 +3,4 @@ moviepy
 pycryptodome
 tqdm
 browser_cookie3
+tabulate
