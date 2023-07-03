@@ -13,6 +13,7 @@ from lib.core.files import read_txt
 
 import json
 import os
+import requests
 
 def main():
     banner()
@@ -23,9 +24,9 @@ def main():
     thread_num = int(args.thread)
     batch_file_path = args.batch_file_path
     site_type = args.site_type
-    # if site_type == 'bili':
-    #     download_bili(url=url, video_save_path = video_save_path, video_name=video_name,thread_num=thread_num)
-    #     return
+    if site_type == 'bili':
+        download_bili(url=url, video_save_path = video_save_path, video_name=video_name,thread_num=thread_num)
+        return
 
     if (url is None or url == '') and (batch_file_path is None or batch_file_path == ''):
         logger.error("")
@@ -64,6 +65,10 @@ def batch_download(batch_file_path, video_save_path, thread_num):
 if __name__ == '__main__':
     try:
         main()
+    except requests.exceptions.ProxyError as pe:
+        logger.error('网络异常，请确认网络正常连接并且关闭系统代理后进行操作！')
+    except requests.exceptions.SSLError as e:
+        logger.error('SSL/TLS 验证错误')
     except KeyboardInterrupt:
         pass
     except SystemExit:

@@ -8,13 +8,17 @@ from lib.parse.urlParse import url_path
 from lib.core.log import logger
 from lib.core.convert import tsToMp4
 from lib.core.convert import tsToMp4forffmpeg
+from lib.core.convert import m4sToMp4forffmpeg
 from lib.core.useparameter import getTmpPath
 from lib.core.useparameter import numlen
 from lib.core.useparameter import numformat
 from lib.core.threads import thread
 from lib.core.files import del_dir_not_empty
 from lib.request.httprequest import request
-from bs4 import BeautifulSoup
+from lib.parse.htmlParse import get_html_tag_content
+from lib.core.cmdOutput import outputTable
+from lib.request.httprequest import request_cookie
+from lib.request.httprequest import head
 from tqdm import tqdm
 import inquirer
 import multiprocessing
@@ -74,29 +78,64 @@ def download_m3u8_video(url, video_save_path, video_name,thread_num):
 
 
 def download_bili(url, video_save_path, video_name,thread_num):
-    resp = request(url)
-    # print(resp.text)
-    html = resp.text.replace("\n", "")
+    resp = request_cookie(url,set_cookie=True)
+    html_data = get_html_tag_content(resp.text, 'script', 'window.__playinfo__=')
+    if html_data is None or html_data == '':
+        logger.error('未获取到视频数据，请检查url是否正确！')
+        return
+    json_data = json.loads(html_data)
+    accept_description = json_data['data']['accept_description']
+    accept_quality = json_data['data']['accept_quality']
+    video_info = json_data['data']['dash']['video']
+    accept_quality_set = set()
+    for v in video_info:
+        accept_quality_set.add(v['id'])
+    accept_quality_set = sorted(accept_quality_set, reverse=True)
+    video_info_table = [['编号','清晰度']]
 
-    soup = BeautifulSoup(html, 'html.parser')
+    for index, element in enumerate(accept_quality_set, start=1):
+        row = [index, accept_description[accept_quality.index(element)]]
+        video_info_table.append(row)
 
-    # 找到所有的<script>标签
-    script_tags = soup.find_all('script')
+    outputTable(video_info_table)
+    user_code_inq = [inquirer.Text('user_code_id', '请输入下载视频清晰度对应的编号值 (eg:1)')]
+    user_code_answer = inquirer.prompt(user_code_inq)
+    video_down_id = accept_quality_set[int(user_code_answer['user_code_id']) - 1]
+    for v in video_info:
+        if v['id'] == video_down_id and v['codecid'] == 12:
+            download_url  = v['baseUrl']
 
-    html = ''
+    filepath = getTmpPath(video_save_path, video_name)
+    head_resp = request(download_url, stream=True)
+    headers = head_resp.headers
+    file_size = int(head_resp.headers.get("Content-Length", 0))
+    progress_bar = tqdm(desc=datetime.now().strftime("[%Y-%m-%d %H:%M:%S,%f")[:-3] + ']',total=file_size,bar_format='{desc} [{bar:85}]{percentage:3.0f}% ({n_fmt}/{total_fmt}) [{elapsed}<{remaining}, {rate_fmt}]', ascii=True)
 
-    # 遍历每个<script>标签并打印脚本内容
-    for script_tag in script_tags:
-        script_content = script_tag.get_text()
+    if thread_num is not None and thread_num > 1:
+        block_size = 100000
+        total_num = file_size // block_size
+        thread_down = thread(num_threads = thread_num)
+        for i in range(total_num):
+            start = i * block_size
+            if i == total_num - 1:
+                end = file_size
+            else:
+                end = start + block_size - 1
+            thread_down.download_m4s(download_url, start, end, numformat(i, thread_num), filepath, progress_bar)
+        thread_down.wait_completion()
+        progress_bar.close()
+        m4sToMp4forffmpeg(filepath, video_save_path, video_name)
 
-        if script_content.startswith('window.__playinfo__'):
-            html = script_content.replace('window.__playinfo__=','')
-            break
-    
-    logger.debug(json.loads(html))
-    questions = [
-        inquirer.Text('name', message='请输入你的名字')
-    ]
-    
-    answers = inquirer.prompt(questions)
-    logger.debug(answers['name'])
+    else:
+        response = request(download_url, stream=True)
+        download_file_path = video_save_path + video_name + '.m4s'
+        block_size = 1024  # 每次下载的数据块大小
+
+        with open(download_file_path, "wb") as file:
+            for data in response.iter_content(block_size):
+                progress_bar.update(len(data))
+                file.write(data)
+
+        progress_bar.close()
+        m4sToMp4forffmpeg(video_save_path, video_save_path, video_name)
+

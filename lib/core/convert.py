@@ -23,7 +23,10 @@ def tsToMp4forffmpeg(tsfilepath, outputpath, outputname):
     logger.info('The FFMPEG conversion begins ......')
     merge(ts_files, tsfilepath, "MP4", True, outputpath + outputname)
 
-# tsToMp4forffmpeg('d:/code/python/test/___2323232.mp4_tmp/', 'd:/code/python/test/', '232322232332.mp4')
+def m4sToMp4forffmpeg(tsfilepath, outputpath, outputname):
+    ts_files = sorted([f for f in os.listdir(tsfilepath) if f.endswith('.m4s')])
+    logger.info('The FFMPEG conversion begins ......')
+    merge(ts_files, tsfilepath, "MP4", True, outputpath + outputname)
 
 def getUnicode(value, encoding=None, noneToNull=False):
     """

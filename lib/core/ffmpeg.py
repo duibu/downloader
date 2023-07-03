@@ -17,7 +17,6 @@ def merge(files, tsfilepath, muxFormat, fastStart, OutPutPath, poster="", audioN
     #     dir_name = os.path.dirname(OutPutPath)
     #     OutPutPath = os.path.join(dir_name, f"{base_name}_{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}")
 
-    command = "-loglevel warning -i concat:"
     ddpAudio = ""
     addPoster = "-map 1 -c:v:1 copy -disposition:v:1 attached_pic"
 
@@ -27,9 +26,13 @@ def merge(files, tsfilepath, muxFormat, fastStart, OutPutPath, poster="", audioN
             ddpAudio = f.read()
     if ddpAudio:
         UseAACFilter = False
-
-    for t in files:
-        command += t + "|"
+    if isinstance(files, list):
+        command = "-loglevel warning -i concat:"
+        for t in files:
+            command += t + "|"
+    elif isinstance(files, str):
+        command = "-loglevel warning -i "
+        command += files
 
 
     switcher = {
