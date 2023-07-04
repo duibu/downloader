@@ -143,10 +143,10 @@ def download_bili(url, video_save_path, video_name,thread_num):
         video_info_table.append(row)
 
     outputTable(video_info_table)
-    user_code_inq = [inquirer.Text('user_code_id', message='请输入下载视频清晰度对应的编号值 (eg:1)', default=1, validate = validate_number)]
+    user_code_inq = [inquirer.Text('user_code_id', message='请输入下载视频清晰度对应的编号值 (eg:1)', default=1, validate = [validate_number])]
     user_code_answer = inquirer.prompt(user_code_inq)
     outputTable(audio_table)
-    user_audio_code_inq = [inquirer.Text('audio_code_id', message = '请输入下载视频音频码率对应的编号值, 默认128kbps (eg:1)', default=2, validate=validate_number)]
+    user_audio_code_inq = [inquirer.Text('audio_code_id', message = '请输入下载视频音频码率对应的编号值, 默认128kbps (eg:1)', default=2, validate=[validate_number])]
     user_audio_code_answer = inquirer.prompt(user_audio_code_inq)
     video_down_id = accept_quality_set[int(user_code_answer['user_code_id']) - 1]
     for v in video_info:
