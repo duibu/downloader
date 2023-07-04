@@ -1,0 +1,3 @@
+http://123.com/kjsdjf.m3u8?xxx=xxx
+http://456.com/kjsdjf.m3u8?xxx=xxx
+http://789.com/kjsdjf.m3u8?xxx=xxx
