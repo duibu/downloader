@@ -161,6 +161,7 @@ def download_bili(url, video_save_path, video_name,thread_num):
     
     if thread_num is not None and thread_num > 1:
         file_size = getContentLength(download_url, stream=True)
+        progress_bar = get_progress_bar(file_size)
         block_size = 100000
         block_size = file_size // thread_num
         threads = []
