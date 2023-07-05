@@ -52,7 +52,7 @@ python downloader.py --url 'http://example.com/example.m3u8?xxx=xxx' -name video
 
 ### 批量下载
 
-批量下载文件示例
+批量下载url文件示例
 
 - [CSV文件](./example/batch-download.csv)
 - [TXT文件](./example/batch-download.txt)
