@@ -1,5 +1,5 @@
 # Downloaders
-
+[![Python 2.6|2.7|3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-MIT-red.svg)](https://raw.githubusercontent.com/duibu/downloader/main/LICENSE)
 ## 环境说明
 
 python:3.x
