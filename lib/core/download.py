@@ -22,11 +22,15 @@ from lib.core.cmdOutput import outputTable
 from lib.request.httprequest import request_cookie
 from lib.request.httprequest import head
 from lib.validate.inquirervalidate import validate_number
+from lib.validate.inquirervalidate import validate_input
+from lib.validate.inquirervalidate import validate_exist
 from lib.core.progressbar import get_progress_bar
 from lib.request.httprequest import getContentLength
 from lib.core.m4sdownload import downloadM4s
 from lib.core.m4sdownload import single_download
 from lib.core.constant import AUDIO_BIT
+from lib.core.command_in import confirm_input
+from lib.core.command_in import text_input
 import inquirer
 import multiprocessing
 import json
@@ -86,21 +90,15 @@ def download_m3u8_video(url, video_save_path, video_name,thread_num):
 
 def download_bili(url, video_save_path, video_name,thread_num):
     logger.info(f'开始解析 url -> [{url}]')
-    read_cookie_inquirer = [inquirer.Text('read_cookie', message='是否允许读取浏览器cookie(Y/N)')]
-    browser_type_inquirer = [inquirer.Text('browser_type', message='请输入cookie所属浏览器名称(chrome/firefox/edge)')]
-    read_cookie_answer = inquirer.prompt(read_cookie_inquirer)
+    read_cookie = confirm_input('read_cookie', message='是否允许读取本机浏览器Cookie?', default=False)
+    # browser_type_inquirer = [inquirer.Text('browser_type', message='请输入cookie所属浏览器名称(chrome/firefox/edge)', validate=validate_input)]
+
     browser_type = 'chrome'
-    if read_cookie_answer['read_cookie'].upper() == 'Y':
-        read_cookie = True
-        browser_type_inquirer = inquirer.prompt(browser_type_inquirer)
-        if 'chrome' == browser_type_inquirer['browser_type'].lower():
-            browser_type = 'chrome'
-        elif 'firefox' == browser_type_inquirer['browser_type'].lower():
-            browser_type = 'firefox'
-        elif 'edge' == browser_type_inquirer['browser_type'].lower():
-            browser_type = 'edge'         
-    else:
-        read_cookie = False
+    if read_cookie:
+        # browser_type_inquirer = inquirer.prompt(browser_type_inquirer)
+        browser_type = text_input('browser_type',message='请输入cookie所属浏览器名称(chrome/firefox/edge)', validate=validate_input)
+        browser_type = browser_type.lower()
+
     resp = request_cookie(url, set_cookie=read_cookie, browser=browser_type)
     html_data = get_html_tag_content(resp.text, 'script', 'window.__playinfo__=')
     if html_data is None or html_data == '':
@@ -126,7 +124,7 @@ def download_bili(url, video_save_path, video_name,thread_num):
     accept_quality_set = sorted(accept_quality_set, reverse=True)
     video_info_table = [['编号','清晰度']]
     audio_table = [['编号','音频码率']]
-    audio_table_map = {'1':30280,'2':30232,'3':30216}
+    audio_table_map = {}
     for i, e in enumerate(sorted(audio_list, reverse=True), start=1):
         if int(e) == 30280:
             audio_table.append([i, '320kbps'])
@@ -143,18 +141,15 @@ def download_bili(url, video_save_path, video_name,thread_num):
         video_info_table.append(row)
 
     outputTable(video_info_table)
-    user_code_inq = [inquirer.Text('user_code_id', message='请输入下载视频清晰度对应的编号值 (eg:1)', default=1, validate = [validate_number])]
-    user_code_answer = inquirer.prompt(user_code_inq)
-    outputTable(audio_table)
-    user_audio_code_inq = [inquirer.Text('audio_code_id', message = '请输入下载视频音频码率对应的编号值, 默认128kbps (eg:1)', default=2, validate=[validate_number])]
-    user_audio_code_answer = inquirer.prompt(user_audio_code_inq)
-    video_down_id = accept_quality_set[int(user_code_answer['user_code_id']) - 1]
+    user_video_code = text_input('user_code_id', message='请输入下载视频清晰度对应的编号值 (eg:1)', default=1, validate=validate_number(lt=0, gt=len(accept_quality_set)))
+    video_down_id = accept_quality_set[int(user_video_code) - 1]
     for v in video_info:
         if v['id'] == video_down_id and v['codecid'] == 12:
             download_url  = v['baseUrl']
-
+    outputTable(audio_table)
+    user_audio_code = text_input('audio_code_id', message = '请输入下载视频音频码率对应的编号值, 默认128kbps (eg:1)', default=2, validate=validate_number(gt=len(audio_table_map)))
     for a in audio_info:
-        if a['id'] == audio_table_map[user_audio_code_answer['audio_code_id']]:
+        if a['id'] == audio_table_map[int(user_audio_code)]:
             audio_url = a['baseUrl']
 
     filepath = getTmpPath(video_save_path, video_name)    
