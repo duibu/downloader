@@ -1,4 +1,4 @@
-import requests
+
 from lib.core.log import logger
 from lib.request.httprequest import request
 

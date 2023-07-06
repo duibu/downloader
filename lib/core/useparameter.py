@@ -1,10 +1,11 @@
+import os
 
 def getTmpPath(path, name):
     result = path
-    if path.endswith('/'):
-        result = path + '__' + name + '_tmp__/'
+    if path.endswith(os.sep):
+        result = path + '__' + name + '_tmp__' + os.sep
     else:
-        result = path + '/__' + name + '_tmp__/'
+        result = path + os.sep + '__' + name + '_tmp__' + os.sep
     return result
 
 

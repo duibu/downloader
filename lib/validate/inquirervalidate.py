@@ -24,7 +24,6 @@ def validate_exist(eg = None):
         try:
             # 尝试将输入值转换为整数
             validate_input(answers, current)
-            print(eg)
             if current not in eg:
                 raise inquirer.errors.ValidationError("", reason="输入内容有误，请查证")
             int(current)

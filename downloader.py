@@ -10,26 +10,26 @@ from lib.core.files import file_is_csv
 from lib.core.files import read_csv
 from lib.core.files import read_txt
 from lib.core import shared_variable
-
+from datetime import datetime
+import os
 import requests
 
 def main():
     banner()
+    print(f'\n[*] starting @ {datetime.now().strftime("%H:%M:%S  / %Y-%m-%d / ")}\n')
     args = cmdLineParser()
     url = args.url
     video_name = args.name
-    video_save_path = args.path if args.path.endswith('/') else args.path + '/'
+    video_save_path = args.path if args.path.endswith(os.sep) else args.path + os.sep
     thread_num = int(args.thread)
     batch_file_path = args.batch_file_path
     site_type = args.site_type
-    print(args.proxy)
-    shared_variable.proxy = args.proxy
+    if args.proxy is not None:
+        shared_variable.proxy = {k: v for proxy in args.proxy for k, v in proxy.items()}
     if site_type == 'bili':
         download_bili(url=url, video_save_path = video_save_path, video_name=video_name,thread_num=thread_num)
         return
 
-    if (url is None or url == '') and (batch_file_path is None or batch_file_path == ''):
-        logger.error("")
     if batch_file_path is not None and batch_file_path != '':
         batch_download(batch_file_path, video_save_path, thread_num)
     else:
@@ -68,9 +68,11 @@ if __name__ == '__main__':
     except IndexError as ie:
         logger.error('用户输入内容序号有误，请核对后重新输入!')
     except requests.exceptions.ProxyError as pe:
-        logger.error('网络异常，请确认网络正常连接并且关闭系统代理后进行操作！')
+        logger.error('网络异常，请确认网络正常连接并且关闭系统代理后进行操作。也可以添加代理参数，详情请使用--help查看帮助！')
     except requests.exceptions.SSLError as e:
         logger.error('SSL/TLS 验证错误')
+    except requests.exceptions.ConnectionError as rec:
+        logger.error('连接错误，请检查url是否正确，网络是否正常！')
     except KeyboardInterrupt:
         pass
     except SystemExit:

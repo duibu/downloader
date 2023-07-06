@@ -1,6 +1,7 @@
 import os
 import shutil
 import csv
+from lib.core.log import logger
 
 def newdir(path):
     if not os.path.isdir(path):
@@ -9,7 +10,7 @@ def newdir(path):
 
 def writeTextFile(filename, filepath, content):
     newdir(filepath)
-    with open(filepath + '/' + filename, 'w') as f:
+    with open(filepath + os.sep + filename, 'w') as f:
         f.write(content)
 
 def del_dir_not_empty(filepath):
@@ -21,11 +22,11 @@ def delete_file(filepath):
         try:
             os.remove(filepath)
         except FileNotFoundError:
-            print(f"文件 {filepath} 不存在")
+            logger.error(f"文件 {filepath} 不存在")
         except PermissionError:
-            print(f"没有权限删除文件 {filepath}")
+            logger.error(f"没有权限删除文件 {filepath}")
         except OSError as e:
-            print(f"删除文件 {filepath} 失败: {e}")
+            logger.error(f"删除文件 {filepath} 失败: {e}")
 
 
 def is_folder_empty(folder_path=''):

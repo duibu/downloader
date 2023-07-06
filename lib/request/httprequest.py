@@ -36,7 +36,6 @@ def request_cookie(url, set_cookie = False, browser = 'chrome', headers = None, 
                 sys.exit()
             if req_cookie is not None:
                 return checkResponse(requests.get(url, cookies = req_cookie, proxies=proxy))
-            print(proxy)
         return checkResponse(requests.get(url, proxies=proxy))
 
 def head(url):

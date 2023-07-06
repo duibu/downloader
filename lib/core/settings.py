@@ -30,3 +30,5 @@ IS_WIN = PLATFORM == "nt"
 IS_LINUX = OS_NAME == "Linux"
 
 ABS_PATH = os.path.dirname(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+
+DEFAULT_DOWNLOAD_PATH = ABS_PATH + os.sep + 'data'

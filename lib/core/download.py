@@ -38,7 +38,7 @@ import re
 import threading
 
 
-def download_m3u8_video(url, video_save_path, video_name,thread_num):
+def download_m3u8_video(url, video_save_path, video_name, thread_num):
     
     count = multiprocessing.Value('i', 0)
     def increment_count():
@@ -88,7 +88,7 @@ def download_m3u8_video(url, video_save_path, video_name,thread_num):
         merge()
 
 
-def download_bili(url, video_save_path, video_name,thread_num):
+def download_bili(url, video_save_path, video_name, thread_num):
     logger.info(f'开始解析 url -> [{url}]')
     read_cookie = confirm_input('read_cookie', message='是否允许读取本机浏览器Cookie?', default=False)
     # browser_type_inquirer = [inquirer.Text('browser_type', message='请输入cookie所属浏览器名称(chrome/firefox/edge)', validate=validate_input)]
@@ -152,6 +152,9 @@ def download_bili(url, video_save_path, video_name,thread_num):
         if a['id'] == audio_table_map[int(user_audio_code)]:
             audio_url = a['baseUrl']
 
+    if video_name is None or video_name == '':
+        video_name = url_path(url).replace('/','')
+        
     filepath = getTmpPath(video_save_path, video_name)    
     
     if thread_num is not None and thread_num > 1:
