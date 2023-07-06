@@ -5,6 +5,7 @@ import sys
 
 from lib.core.files import writeTextFile
 from lib.core.log import logger
+from lib.parse.urlParse import is_url
 
 def getM3u8KeyUri(m3u8_content):
     pattern = r'#EXT-X-KEY:(METHOD=[^,]+),URI="([^"]+)"(?:,IV=([0-9A-Fa-f]+))?'
@@ -65,7 +66,10 @@ def m3u8ToJson(baseUrl, m3u8_content, key = ''):
             continue
         
         if flag:
-            seg["url"] = baseUrl + line
+            if is_url(line):
+                seg["url"] = line
+            else:
+                seg["url"] = baseUrl + line
             data["segments"].append(seg)
             index += 1
             flag = False
