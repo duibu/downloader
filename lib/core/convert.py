@@ -3,6 +3,7 @@ import os
 from lib.core.ffmpeg import merge
 from lib.core.ffmpeg import audio_video_merge
 from lib.core.log import logger
+from lib.core.files import file_exists
 
 
 def tsToMp4(tsfilepath, outputname, outputpath):
@@ -24,14 +25,14 @@ def tsToMp4forffmpeg(tsfilepath, outputpath, outputname):
     logger.info('The FFMPEG conversion begins ......')
     merge(ts_files, tsfilepath, "MP4", True, outputpath + outputname)
 
-def m4sToMp4forffmpeg(tsfilepath, outputpath, outputname):
+def m4s_merge_for_ffmpeg(tsfilepath, outputpath, outputname):
     ts_files = sorted([f for f in os.listdir(tsfilepath) if f.endswith('.m4s')])
     logger.info('The FFMPEG conversion begins ......')
-    merge(ts_files, tsfilepath, "MP4", True, outputpath + outputname)
+    merge(ts_files, tsfilepath, "MP4", True, outputpath + outputname + '_v')
 
 def m4s_audio_video_merge(tsfilepath, outputpath, outputname):
     logger.info('The FFMPEG conversion begins ......')
-    audio_video_merge(f'{outputname}_v.m4s', f'{outputname}_a.m4s', tsfilepath, "MP4", True, outputpath + outputname)
+    audio_video_merge(f'{outputname}_v.m4s' if file_exists(outputpath + outputname + '_v.m4s') else f'{outputname}_v.mp4', f'{outputname}_a.m4s', tsfilepath, "MP4", True, outputpath + outputname)
 
 def getUnicode(value, encoding=None, noneToNull=False):
     """

@@ -8,17 +8,18 @@ from lib.parse.urlParse import url_path
 from lib.core.log import logger
 from lib.core.convert import tsToMp4
 from lib.core.convert import tsToMp4forffmpeg
-from lib.core.convert import m4sToMp4forffmpeg
+from lib.core.convert import m4s_merge_for_ffmpeg
 from lib.core.convert import m4s_audio_video_merge
 from lib.core.useparameter import getTmpPath
 from lib.core.useparameter import numlen
 from lib.core.useparameter import numformat
-from lib.core.threads import thread
+from lib.core.threads import ThreadPool
 from lib.core.files import del_dir_not_empty
 from lib.core.files import delete_file
 from lib.request.httprequest import request
 from lib.parse.htmlParse import get_html_tag_content
 from lib.core.cmdOutput import outputTable
+from lib.core.cmdOutput import get_link_text
 from lib.request.httprequest import request_cookie
 from lib.request.httprequest import head
 from lib.validate.inquirervalidate import validate_number
@@ -66,6 +67,7 @@ def download_m3u8_video(url, video_save_path, video_name, thread_num):
         pbar.close()
         tsToMp4forffmpeg(tsfilepath = filepath, outputname = video_name, outputpath = video_save_path)
         logger.info('The download is complete')
+        logger.info(f'文件保存路径 -> {get_link_text(video_save_path + video_name + ".mp4")}')
         del_dir_not_empty(filepath)
 
     def pbarUp():
@@ -77,10 +79,13 @@ def download_m3u8_video(url, video_save_path, video_name, thread_num):
     countlen = numlen(json_data['count'])
 
     if thread_num is not None and thread_num > 1:
-        thread_down = thread(num_threads = thread_num)
+        # thread_down = thread(num_threads = thread_num)
+        thread_pool = ThreadPool(thread_num, pbarUp)
         for s in seg:
-            thread_down.downloadts(s['url'], s['key'], s['iv'], numformat(s['index'], countlen), s['method'], filepath, pbarUp())
-        thread_down.wait_completion()
+            # thread_down.downloadts(s['url'], s['key'], s['iv'], numformat(s['index'], countlen), s['method'], filepath, pbarUp())
+            thread_pool.add_task(downloadM3u8Ts, (s['url'], s['key'], s['iv'], numformat(s['index'], countlen), s['method'], filepath))
+        thread_pool.start()
+        # thread_down.wait_completion()
     else:
         for s in seg:
             downloadM3u8Ts(s['url'], s['key'], s['iv'], numformat(s['index'], countlen), s['method'], filepath)
@@ -154,36 +159,40 @@ def download_bili(url, video_save_path, video_name, thread_num):
 
     if video_name is None or video_name == '':
         video_name = url_path(url).replace('/','')
-        
+
     filepath = getTmpPath(video_save_path, video_name)    
     
+    download_video_path = video_save_path + video_name + '_v.m4s'
+    download_audio_path = video_save_path + video_name + '_a.m4s'
+
     if thread_num is not None and thread_num > 1:
+        logger.info('Start downloading the video file...')
         file_size = getContentLength(download_url, stream=True)
         progress_bar = get_progress_bar(file_size)
         block_size = 100000
         block_size = file_size // thread_num
-        threads = []
-        # thread_down = thread(num_threads = thread_num)
+        thread_pool = ThreadPool(thread_num)
         for i in range(thread_num):
             start = i * block_size
             if i == thread_num - 1:
                 end = file_size
             else:
                 end = start + block_size - 1
-            # argss.append((download_url, start, end, numformat(i, thread_num), filepath, progress_bar))
-            thread = threading.Thread(target=downloadM4s, args=(download_url, start, end, numformat(i, thread_num), filepath, progress_bar))
-            thread.start()
-            threads.append(thread)
-            # thread_down.download_m4s(download_url, start, end, numformat(i, thread_num), filepath, progress_bar)
-        for thread in threads:
-            thread.join()
-
+            thread_pool.add_task(downloadM4s, (download_url, start, end, numformat(i, thread_num), filepath, progress_bar))
+        
+        thread_pool.start()
         progress_bar.close()
-        m4sToMp4forffmpeg(filepath, video_save_path, video_name)
-
+        m4s_merge_for_ffmpeg(filepath, video_save_path, video_name)
+        del_dir_not_empty(filepath)
+        logger.info('Start downloading the audio file...')
+        single_download(audio_url, download_audio_path)
+        logger.info('Start compositing...')
+        m4s_audio_video_merge(video_save_path, video_save_path, video_name)
+        logger.info('The download is complete.')
+        logger.info(f'文件保存路径 -> {get_link_text(video_save_path + video_name + ".mp4")}')
+        delete_file(download_audio_path)
+        delete_file(video_save_path + video_name + '_v.mp4')
     else:
-        download_video_path = video_save_path + video_name + '_v.m4s'
-        download_audio_path = video_save_path + video_name + '_a.m4s'
         block_size = 1024  # 每次下载的数据块大小
         logger.info('Start downloading the video file...')
         single_download(download_url, download_video_path)
@@ -192,6 +201,6 @@ def download_bili(url, video_save_path, video_name, thread_num):
         logger.info('Start compositing...')
         m4s_audio_video_merge(video_save_path, video_save_path, video_name)
         logger.info('The download is complete.')
-        logger.info(f'文件保存路径 -> [{video_save_path}{video_name}.mp4]')
+        logger.info(f'文件保存路径 -> {get_link_text(video_save_path + video_name + ".mp4")}')
         delete_file(download_video_path)
         delete_file(download_audio_path)

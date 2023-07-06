@@ -1,20 +1,36 @@
 from concurrent.futures import ThreadPoolExecutor
 from lib.core.m3u8download import downloadM3u8Ts
 from lib.core.m4sdownload import downloadM4s
+import queue, time, threading
+import concurrent.futures
 
-class thread:
-    def __init__(self, num_threads=10,done_callback=None):
-        self.num_threads = num_threads
-        self.executor = ThreadPoolExecutor(max_workers=num_threads)
+class ThreadPool():
+    '''线城池模块'''
+    def __init__(self, thread_num, call = None):
+        self.max_thread = thread_num
+        self.thread_pool = concurrent.futures.ThreadPoolExecutor(max_workers=self.max_thread)
+        self.task_queue = queue.Queue()
+        self.futures = {}
+        self.call = call
 
-    def downloadts(self, url, key, iv, name, method, path, callback=None):
-        future = self.executor.submit(downloadM3u8Ts(url, key, iv, name, method, path))
-        if callback:
-            future.add_done_callback(callback)
+    def add_task(self, func, target):
+        new_task = (func, target)
+        self.task_queue.put(new_task)
+
+    def start(self):
+        while self.task_queue.qsize() != 0:
+            current_target, current_script = self.task_queue.get()
+            future = self.thread_pool.submit(current_target, *current_script)
+            self.futures[future] = (current_target, current_script)
+        # while len(self.futures) > 0:
+        for future in concurrent.futures.as_completed(self.futures):
+            if(self.call is not None):
+                self.call()
+                # if future.done():
+                #     del self.futures[future]
+            # time.sleep(0.1)
+
+        self.thread_pool.shutdown(wait=True)
     
-    def download_m4s(self, url, start, end, name, filepath, progress_bar):
-        self.executor.submit(downloadM4s(url, start, end, name, filepath, progress_bar))
-
-
-    def wait_completion(self):
-        self.executor.shutdown(wait=True)
+    def do_result(self, result):
+        print(result)

@@ -13,6 +13,8 @@ def request(url, stream = False, headers = None, proxy = None):
         headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'}
     elif headers is not None and isinstance(type(headers), dict):
         headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
+    else:
+        headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
     if url is not None and url != '':
         return checkResponse(requests.get(url, stream=stream, headers = headers, proxies = proxy))
         
@@ -54,8 +56,8 @@ def is_enable_proxy():
         return False
 
 def checkResponse(resp):
-    if resp.status_code == 200:
-            return resp
+    if resp.status_code in [200, 206]:
+        return resp
     elif resp.status_code == 403:
         logger.error('没有相应的权限!')
         sys.exit()
