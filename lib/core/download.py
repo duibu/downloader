@@ -82,10 +82,8 @@ def download_m3u8_video(url, video_save_path, video_name, thread_num):
         # thread_down = thread(num_threads = thread_num)
         thread_pool = ThreadPool(thread_num, pbarUp)
         for s in seg:
-            # thread_down.downloadts(s['url'], s['key'], s['iv'], numformat(s['index'], countlen), s['method'], filepath, pbarUp())
             thread_pool.add_task(downloadM3u8Ts, (s['url'], s['key'], s['iv'], numformat(s['index'], countlen), s['method'], filepath))
         thread_pool.start()
-        # thread_down.wait_completion()
     else:
         for s in seg:
             downloadM3u8Ts(s['url'], s['key'], s['iv'], numformat(s['index'], countlen), s['method'], filepath)
