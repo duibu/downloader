@@ -10,7 +10,6 @@ from lib.core.settings import DEFAULT_DOWNLOAD_PATH
 from lib.core import shared_variable
 
 from lib.core.settings import IS_WIN
-import re
 import pathlib
 
 def parse_key_value_pair(pair):
