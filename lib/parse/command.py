@@ -7,6 +7,7 @@ import argparse
 from lib.parse.urlParse import is_url
 from lib.core.log import logger
 from lib.core.settings import DEFAULT_DOWNLOAD_PATH
+from lib.core import shared_variable
 
 from lib.core.settings import IS_WIN
 import re
@@ -52,8 +53,8 @@ def cmdLineParser(argv=None):
         # parser.add_argument("--cookie", dest="http_cookie",
         #     help="http request cookie header. (e.g. \"xxx:xxx;xxx:xxx\")")
 
-        parser.add_argument("--proxy", nargs='*', dest="proxy", type=parse_key_value_pair,
-            help="Network Agent configuration. (e.g. \"http://127.0.0.1:8080 https://127.0.0.1:8080\")")
+        parser.add_argument("--proxy", nargs='*', dest="proxy",
+            help="Network Agent configuration. (e.g. \"http='http://127.0.0.1:8080' https='https://127.0.0.1:8080'\")")
 
         args = parser.parse_args()
         
@@ -65,6 +66,12 @@ def cmdLineParser(argv=None):
             logger.error(f'无效的URL -> [{args.url}]')
             sys.exit()
 
+        params = {}
+        if args.proxy is not None and args.proxy != '':
+            for param in args.proxy:
+                key, value = param.split('=')
+                params[key] = value
+            shared_variable.proxy = params
         return args
     except Exception as e:
         print(e)

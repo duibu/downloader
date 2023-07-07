@@ -9,7 +9,6 @@ from lib.core.files import file_is_txt
 from lib.core.files import file_is_csv
 from lib.core.files import read_csv
 from lib.core.files import read_txt
-from lib.core import shared_variable
 from datetime import datetime
 import os
 import requests
@@ -24,8 +23,6 @@ def main():
     thread_num = int(args.thread)
     batch_file_path = args.batch_file_path
     site_type = args.site_type
-    if args.proxy is not None:
-        shared_variable.proxy = {k: v for proxy in args.proxy for k, v in proxy.items()}
     if site_type == 'bili':
         download_bili(url=url, video_save_path = video_save_path, video_name=video_name,thread_num=thread_num)
         return

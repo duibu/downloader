@@ -26,9 +26,6 @@ class ThreadPool():
         for future in concurrent.futures.as_completed(self.futures):
             if(self.call is not None):
                 self.call()
-                # if future.done():
-                #     del self.futures[future]
-            # time.sleep(0.1)
 
         self.thread_pool.shutdown(wait=True)
     

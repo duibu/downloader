@@ -1,5 +1,7 @@
 # Downloaders
-[![Python 2.6|2.7|3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-MIT-red.svg)](https://raw.githubusercontent.com/duibu/downloader/main/LICENSE)
+[![Python 2.6|2.7|3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-MIT-red.svg)](https://raw.githubusercontent.com/duibu/downloader/main/LICENSE) 
+
+本项目主要用于下载各种视频流，目前支持m3u8流媒体文件下载和b站视频下载，并且支持多线程下载，其他类型（或网站）视频的下载还在努力开发中
 
 ## 环境说明
 
@@ -27,6 +29,8 @@ pip install -r requirements.txt
 --path --save-path: 视频保存路径
 --batch-file: 批量地址文件的绝对路径，批量下载时使用，支持csv和txt
 --thread: 下载视频文件的线程数
+--site-type: 网站类型，例如下载b站视频时该项配置bili
+--proxy: 配置代理信息
 ```
 
 ## 使用示例
@@ -35,20 +39,26 @@ pip install -r requirements.txt
 
 直接下载
 
-```
+```bash
 python downloader.py --url 'http://example.com/example.m3u8?xxx=xxx'
 ```
 
 指定文件名称下载
 
-```
+```bash
 python downloader.py --url 'http://example.com/example.m3u8?xxx=xxx' -name video
 ```
 
 指定保存路径和文件名下载
 
-```
+```bash
 python downloader.py --url 'http://example.com/example.m3u8?xxx=xxx' -name video -path /home/user/video
+```
+
+下载时配置代理
+
+```bash
+python downloader.py --url 'http://example.com/example.m3u8?xxx=xxx' --proxy http='http://127.0.0.1:7890' https='https://127.0.0.1:7890'
 ```
 
 ### 批量下载
@@ -58,8 +68,22 @@ python downloader.py --url 'http://example.com/example.m3u8?xxx=xxx' -name video
 - [CSV文件](./example/batch-download.csv)
 - [TXT文件](./example/batch-download.txt)
 
-```
+```bash
 python downloader.py --batch-file d:/video/url.txt -path /home/user/video
+```
+
+## b站视频下载
+
+直接下载
+
+```bash
+python downloader.py --url 'https://www.bilibili.com/video/BV1DX4y1p7CT/' --site-type bili
+```
+
+多线程下载
+
+```bash
+python downloader.py --url 'https://www.bilibili.com/video/BV1DX4y1p7CT/' --thread 2 --site-type bili
 ```
 
 ## Q&A
