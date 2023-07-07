@@ -90,7 +90,7 @@ python downloader.py --url 'https://www.bilibili.com/video/BV1DX4y1p7CT/' --thre
 
 1. 使用Clash for Windows科学上网之后提示网络异常
 
-   由于Clash for Windows配置代理时，只有http协议可以正常使用代理，https协议需要使用http://localhost:7890才可以代理，所以建议关掉代理或者手动输入代理协议以及地址，详情请使用--help命令查看参数说明
+   由于Clash for Windows配置代理时，只有http协议可以正常使用代理，https协议需要使用 `http://localhost:7890` 才可以代理，所以建议关掉代理或者手动输入代理协议以及地址，详情请使用--help命令查看参数说明
 
 2. 提示权限不足
 
