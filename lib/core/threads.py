@@ -1,6 +1,4 @@
-from concurrent.futures import ThreadPoolExecutor
-from lib.core.m3u8download import downloadM3u8Ts
-from lib.core.m4sdownload import downloadM4s
+
 import queue, time, threading
 import concurrent.futures
 

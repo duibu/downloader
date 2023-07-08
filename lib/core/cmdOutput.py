@@ -3,7 +3,6 @@ from tabulate import tabulate
 def outputTable(table):
     print(tabulate(table, headers="firstrow", tablefmt="grid"))
 
-
 def get_yellow_font(text):
     return f"\033[01;33m{text}\033[0m"
 

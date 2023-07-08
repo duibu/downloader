@@ -2,7 +2,7 @@ import inquirer
 import sys
 
 
-def text_input(param, message,default=None,validate=True):
+def text_input(param, message, default=None, validate=True):
     try:
         questions = [inquirer.Text(param, message=message, default=default, validate=validate, show_default=False)]
         answer = inquirer.prompt(questions, raise_keyboard_interrupt=True)

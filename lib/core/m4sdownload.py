@@ -2,7 +2,6 @@
 from lib.core.log import logger
 from lib.request.httprequest import request
 
-from lib.parse.m3u8Parse import getM3u8KeyUri
 from lib.core.files import newdir
 from lib.core.progressbar import get_progress_bar
 

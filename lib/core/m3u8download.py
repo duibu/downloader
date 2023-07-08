@@ -1,11 +1,9 @@
-import requests
+
 import base64
 from Crypto.Cipher import AES
 from Crypto.Util import Padding
 from lib.core.log import logger
 from lib.request.httprequest import request
-
-from lib.parse.m3u8Parse import getM3u8KeyUri
 from lib.core.files import newdir
 
 def downloadm3u8(url):

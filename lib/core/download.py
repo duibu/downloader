@@ -21,10 +21,8 @@ from lib.parse.htmlParse import get_html_tag_content
 from lib.core.cmdOutput import outputTable
 from lib.core.cmdOutput import get_link_text
 from lib.request.httprequest import request_cookie
-from lib.request.httprequest import head
 from lib.validate.inquirervalidate import validate_number
 from lib.validate.inquirervalidate import validate_input
-from lib.validate.inquirervalidate import validate_exist
 from lib.core.progressbar import get_progress_bar
 from lib.request.httprequest import getContentLength
 from lib.core.m4sdownload import downloadM4s
@@ -32,11 +30,9 @@ from lib.core.m4sdownload import single_download
 from lib.core.constant import AUDIO_BIT
 from lib.core.command_in import confirm_input
 from lib.core.command_in import text_input
-import inquirer
 import multiprocessing
 import json
 import re
-import threading
 
 
 def download_m3u8_video(url, video_save_path, video_name, thread_num):
@@ -94,11 +90,9 @@ def download_m3u8_video(url, video_save_path, video_name, thread_num):
 def download_bili(url, video_save_path, video_name, thread_num):
     logger.info(f'开始解析 url -> [{url}]')
     read_cookie = confirm_input('read_cookie', message='是否允许读取本机浏览器Cookie?', default=False)
-    # browser_type_inquirer = [inquirer.Text('browser_type', message='请输入cookie所属浏览器名称(chrome/firefox/edge)', validate=validate_input)]
 
     browser_type = 'chrome'
     if read_cookie:
-        # browser_type_inquirer = inquirer.prompt(browser_type_inquirer)
         browser_type = text_input('browser_type',message='请输入cookie所属浏览器名称(chrome/firefox/edge)', validate=validate_input)
         browser_type = browser_type.lower()
 

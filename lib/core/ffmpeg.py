@@ -76,13 +76,6 @@ def merge(files, tsfilepath, muxFormat, fastStart, OutPutPath, poster="", audioN
 def audio_video_merge(video_file, audio_file, m4sfilepath, muxFormat, fastStart, OutPutPath, poster="", audioName="", title="",
           copyright="", comment="", encodingTool=""):
     UseAACFilter = False
-    # dateString = REC_TIME if REC_TIME else datetime.datetime.now().isoformat()
-
-    # Coexistence strategy for already existing files with the same name
-    # if os.path.exists(f"{OutPutPath}.{muxFormat.lower()}"):
-    #     base_name = os.path.basename(OutPutPath)
-    #     dir_name = os.path.dirname(OutPutPath)
-    #     OutPutPath = os.path.join(dir_name, f"{base_name}_{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}")
 
     ddpAudio = ""
     addPoster = "-map 1 -c:v:1 copy -disposition:v:1 attached_pic"

@@ -2,7 +2,6 @@ import sys
 
 from argparse import ArgumentParser
 from argparse import ArgumentError
-from argparse import SUPPRESS
 import argparse
 from lib.parse.urlParse import is_url
 from lib.core.log import logger
@@ -10,7 +9,6 @@ from lib.core.settings import DEFAULT_DOWNLOAD_PATH
 from lib.core import shared_variable
 
 from lib.core.settings import IS_WIN
-import pathlib
 
 def parse_key_value_pair(pair):
     result = {}
