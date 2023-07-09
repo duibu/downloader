@@ -6,7 +6,6 @@ from lib.parse.m3u8Parse import getM3u8KeyUri
 from lib.parse.urlParse import getm3u8BaseUrl
 from lib.parse.urlParse import url_path
 from lib.core.log import logger
-from lib.core.convert import tsToMp4
 from lib.core.convert import tsToMp4forffmpeg
 from lib.core.convert import m4s_merge_for_ffmpeg
 from lib.core.convert import m4s_audio_video_merge

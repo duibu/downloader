@@ -1,4 +1,4 @@
-from moviepy.editor import VideoFileClip, concatenate_videoclips
+# from moviepy.editor import VideoFileClip, concatenate_videoclips
 import os
 from lib.core.ffmpeg import merge
 from lib.core.ffmpeg import audio_video_merge
@@ -6,19 +6,19 @@ from lib.core.log import logger
 from lib.core.files import file_exists
 
 
-def tsToMp4(tsfilepath, outputname, outputpath):
-    # 找到所有的 TS 文件，并转换为 VideoFileClip 对象
-    ts_files = sorted([f for f in os.listdir(tsfilepath) if f.endswith('.ts')])
-    clips = [VideoFileClip(os.path.join(tsfilepath, f)) for f in ts_files]
+# def tsToMp4(tsfilepath, outputname, outputpath):
+#     # 找到所有的 TS 文件，并转换为 VideoFileClip 对象
+#     ts_files = sorted([f for f in os.listdir(tsfilepath) if f.endswith('.ts')])
+#     clips = [VideoFileClip(os.path.join(tsfilepath, f)) for f in ts_files]
 
-    # 将所有的 VideoFileClip 对象连接成一个片段，并写入 MP4 文件
-    try:
-        final_clip = concatenate_videoclips(clips)
-        final_clip.write_videofile(outputpath + outputname)
-    except Exception as e:
-        print(e)
-    finally:
-        final_clip.close()
+#     # 将所有的 VideoFileClip 对象连接成一个片段，并写入 MP4 文件
+#     try:
+#         final_clip = concatenate_videoclips(clips)
+#         final_clip.write_videofile(outputpath + outputname)
+#     except Exception as e:
+#         print(e)
+#     finally:
+#         final_clip.close()
 
 def tsToMp4forffmpeg(tsfilepath, outputpath, outputname):
     ts_files = sorted([f for f in os.listdir(tsfilepath) if f.endswith('.ts')])
