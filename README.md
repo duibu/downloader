@@ -1,5 +1,5 @@
 # Downloader
-[![Python 2.6|2.7|3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-MIT-red.svg)](https://raw.githubusercontent.com/duibu/downloader/main/LICENSE) 
+[![Python 3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-MIT-red.svg)](https://raw.githubusercontent.com/duibu/downloader/main/LICENSE) 
 
 本项目主要用于下载各种视频流，目前支持m3u8流媒体文件下载和b站视频下载，并且支持多线程下载(单个视频，番剧等还在努力开发中)，其他类型（或网站）视频的下载还在努力开发中
 
