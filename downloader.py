@@ -17,7 +17,8 @@ def main():
     banner()
     print(f'\n[*] starting @ {datetime.now().strftime("%H:%M:%S  / %Y-%m-%d / ")}\n')
     args = cmdLineParser()
-    url = args.url
+    if args.url is not None:
+        url = args.url
     video_name = args.name
     video_save_path = args.path if args.path.endswith(os.sep) else args.path + os.sep
     thread_num = int(args.thread)

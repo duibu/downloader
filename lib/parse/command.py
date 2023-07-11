@@ -29,7 +29,7 @@ def cmdLineParser(argv=None):
     parser = ArgumentParser()
 
     try:
-        parser.add_argument("-u", "--url", dest="url",
+        parser.add_argument("-u", "--url", dest="url", default="",
             help="Target URL (e.g. \"http://xxx.com/123.m3u8?sign=xxxx\")")
 
         parser.add_argument("--name", "--video-name", dest="name",
@@ -59,7 +59,7 @@ def cmdLineParser(argv=None):
             parser.print_usage()
             sys.exit()
 
-        if not is_url(args.url):
+        if args.url != '' and not is_url(args.url):
             logger.error(f'无效的URL -> [{args.url}]')
             sys.exit()
 

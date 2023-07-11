@@ -1,7 +1,17 @@
 # Downloader
 [![Python 3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-MIT-red.svg)](https://raw.githubusercontent.com/duibu/downloader/main/LICENSE) 
 
-本项目主要用于下载各种视频流，目前支持m3u8流媒体文件下载和b站视频下载，并且支持多线程下载(单个视频，番剧等还在努力开发中)，其他类型（或网站）视频的下载还在努力开发中
+```bash
+########   #######  ##      ## ##    ## ##        #######     ###    ########  ######## ########
+##     ## ##     ## ##  ##  ## ###   ## ##       ##     ##   ## ##   ##     ## ##       ##     ## 
+##     ## ##     ## ##  ##  ## ####  ## ##       ##     ##  ##   ##  ##     ## ##       ##     ## 
+##     ## ##     ## ##  ##  ## ## ## ## ##       ##     ## ##     ## ##     ## ######   ########  
+##     ## ##     ## ##  ##  ## ##  #### ##       ##     ## ######### ##     ## ##       ##   ##   
+##     ## ##     ## ##  ##  ## ##   ### ##       ##     ## ##     ## ##     ## ##       ##    ##  
+########   #######   ###  ###  ##    ## ########  #######  ##     ## ########  ######## ##     ## 
+```
+
+本项目主要用于下载各种网站的视频，目前支持m3u8流媒体文件下载和b站视频下载(单个视频，番剧等还在努力开发中)，并且支持多线程下载，其他类型（或网站）视频的下载还在努力开发中
 
 ## 环境说明
 
@@ -43,17 +53,23 @@ pip install -r requirements.txt
 python downloader.py --url 'http://example.com/example.m3u8?xxx=xxx'
 ```
 
+![直接下载](./example/image/Snipaste_2023-07-11_11-01-20.png)
+
 指定文件名称下载
 
 ```bash
-python downloader.py --url 'http://example.com/example.m3u8?xxx=xxx' -name video
+python downloader.py --url 'http://example.com/example.m3u8?xxx=xxx' --name video
 ```
+
+![指定文件名称](./example/image/Snipaste_2023-07-11_11-03-57.png)
 
 指定保存路径和文件名下载
 
 ```bash
-python downloader.py --url 'http://example.com/example.m3u8?xxx=xxx' -name video -path /home/user/video
+python downloader.py --url 'http://example.com/example.m3u8?xxx=xxx' --name video --path /home/user/video
 ```
+
+![指定保存路径](./example/image/Snipaste_2023-07-11_11-06-56.png)
 
 下载时配置代理
 
@@ -69,8 +85,10 @@ python downloader.py --url 'http://example.com/example.m3u8?xxx=xxx' --proxy htt
 - [TXT文件](./example/batch-download.txt)
 
 ```bash
-python downloader.py --batch-file d:/video/url.txt -path /home/user/video
+python downloader.py --batch-file d:/video/url.txt --path /home/user/video
 ```
+
+![批量下载](./example/image/Snipaste_2023-07-11_10-54-46.png)
 
 ## b站视频下载
 
@@ -80,11 +98,17 @@ python downloader.py --batch-file d:/video/url.txt -path /home/user/video
 python downloader.py --url 'https://www.bilibili.com/video/BV1DX4y1p7CT/' --site-type bili
 ```
 
+![下载B站视频](./example/image/Snipaste_2023-07-11_11-08-24.png)
+
 多线程下载
 
 ```bash
 python downloader.py --url 'https://www.bilibili.com/video/BV1DX4y1p7CT/' --thread 2 --site-type bili
 ```
+
+![多线程下载](./example/image/Snipaste_2023-07-11_11-10-07.png)
+
+
 
 ## Q&A
 
