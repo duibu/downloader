@@ -10,7 +10,7 @@ class Logger:
         self.logger = logging.getLogger(name)
         self.logger.setLevel(level)
 
-        formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] %(message)s')
+        formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] %(message)s', datefmt='%H:%M:%S')
 
         console_handler = logging.StreamHandler(stream=sys.stdout)
         console_handler.setFormatter(formatter)
