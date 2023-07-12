@@ -1,11 +1,12 @@
 import logging
 import sys
+from datetime import datetime
 
 class Logger:
 
     _instance = None
     
-    def __init__(self, name='default', level=logging.DEBUG):
+    def __init__(self, name='downloader-log', level=logging.DEBUG):
         self.logger = logging.getLogger(name)
         self.logger.setLevel(level)
 
@@ -15,9 +16,9 @@ class Logger:
         console_handler.setFormatter(formatter)
         self.logger.addHandler(console_handler)
 
-        # file_handler = logging.FileHandler(f'{name}.log')
-        # file_handler.setFormatter(formatter)
-        # self.logger.addHandler(file_handler)
+        file_handler = logging.FileHandler(f'./log/{name}-{datetime.now().strftime("%Y%m%d%H%M%S")}.log')
+        file_handler.setFormatter(formatter)
+        self.logger.addHandler(file_handler)
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
