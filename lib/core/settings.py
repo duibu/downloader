@@ -5,7 +5,7 @@ import sys
 
 VERSION = "VERSION: 1.0.0"
 
-SITE = "https://github.com/duibu/downlonder"
+SITE = "https://github.com/duibu/downloader"
 
 TYPE = "dev" if VERSION.count('.') > 2 and VERSION.split('.')[-1] != '0' else "stable"
 
