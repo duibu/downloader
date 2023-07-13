@@ -40,7 +40,7 @@ pip install -r requirements.txt
 --batch-file: 批量地址文件的绝对路径，批量下载时使用，支持csv和txt
 --thread: 下载视频文件的线程数
 --site-type: 网站类型，例如下载b站视频时该项配置bili
---proxy: 配置代理信息
+--proxy: 配置代理信息，示例(clash for windows)：--proxy http=http://127.0.0.1:7890 https=http://127.0.0.1:7890
 ```
 
 ## 使用示例

@@ -6,15 +6,14 @@ from lib.parse.urlParse import urlresolution
 from lib.core.log import logger
 from lib.core import shared_variable
 
-def request(url, stream = False, headers = None, proxy = None):
+def request(url, stream = False, headers = None, proxy:dict = None):
     if proxy is None and shared_variable.proxy is not None:
         proxy = shared_variable.proxy
     if headers is None:
-        headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'}
-    elif headers is not None and isinstance(type(headers), dict):
-        headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
-    else:
-        headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
+        headers = shared_variable.headers
+    elif headers is not None:
+        # headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
+        headers.update(shared_variable.headers)
     if url is not None and url != '':
         return checkResponse(requests.get(url, stream=stream, headers = headers, proxies = proxy))
         
@@ -37,7 +36,9 @@ def request_cookie(url, set_cookie = False, browser = 'chrome', headers = None, 
                 logger.error(f'cookie无法正确读取, 请关闭{browser}浏览器!')
                 sys.exit()
             if req_cookie is not None:
-                return checkResponse(requests.get(url, cookies = req_cookie, proxies=proxy))
+                if headers is None:
+                    headers = shared_variable.headers
+                return checkResponse(requests.get(url, cookies = req_cookie, proxies=proxy, headers = headers))
         return checkResponse(requests.get(url, proxies=proxy))
 
 def head(url):

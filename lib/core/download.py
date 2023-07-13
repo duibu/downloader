@@ -29,6 +29,7 @@ from lib.core.m4sdownload import single_download
 from lib.core.constant import AUDIO_BIT
 from lib.core.command_in import confirm_input
 from lib.core.command_in import text_input
+from lib.core import shared_variable
 import multiprocessing
 import json
 import re
@@ -88,6 +89,7 @@ def download_m3u8_video(url, video_save_path, video_name, thread_num):
 
 def download_bili(url, video_save_path, video_name, thread_num):
     logger.info(f'开始解析 url -> [{url}]')
+    shared_variable.headers['Referer'] = url
     read_cookie = confirm_input('read_cookie', message='是否允许读取本机浏览器Cookie?', default=False)
 
     browser_type = 'chrome'

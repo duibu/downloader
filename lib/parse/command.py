@@ -10,11 +10,6 @@ from lib.core import shared_variable
 
 from lib.core.settings import IS_WIN
 
-def parse_key_value_pair(pair):
-    result = {}
-    result[pair.split(":")[0]] = pair
-    return result
-
 def cmdLineParser(argv=None):
     """
     This function parses the command line parameters and arguments
@@ -65,10 +60,17 @@ def cmdLineParser(argv=None):
 
         params = {}
         if args.proxy is not None and args.proxy != '':
-            for param in args.proxy:
-                key, value = param.split('=')
-                params[key] = value
-            shared_variable.proxy = params
+            try:
+                for param in args.proxy:
+                    key, value = param.split('=')
+                    params[key] = value
+                    shared_variable.proxy = params
+            except Exception as e:
+                logger.error('代理参数配置有误，请确认后重新配置!')
+                parser.print_help()
+                sys.exit()
+
+
         return args
     except Exception as e:
         print(e)

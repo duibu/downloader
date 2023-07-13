@@ -9,17 +9,15 @@ from lib.core.files import newdir
 def downloadm3u8(url):
     logger.info('获取m3u8流信息')
     resp = request(url)
-    if resp.status_code == 200:
-        m3u8_content = resp.text
-        return m3u8_content
+    m3u8_content = resp.text
+    return m3u8_content
 
 
 def getm3u8key(url):
     logger.info('获取Key')
     resp = request(url)
-    if resp.status_code == 200:
-        key = base64.b64encode(resp.content).decode('utf-8')
-        return key
+    key = base64.b64encode(resp.content).decode('utf-8')
+    return key
 
 
 def downloadM3u8Ts(url, key, iv, name, method, filepath):
