@@ -2,7 +2,7 @@ import requests
 import sys
 import urllib.request
 import browser_cookie3
-from lib.parse.urlParse import urlresolution
+from lib.parse.url_parse import urlresolution
 from lib.core.log import logger
 from lib.core import shared_variable
 

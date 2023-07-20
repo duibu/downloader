@@ -3,7 +3,7 @@ import sys
 from argparse import ArgumentParser
 from argparse import ArgumentError
 import argparse
-from lib.parse.urlParse import is_url
+from lib.parse.url_parse import is_url
 from lib.core.log import logger
 from lib.core.settings import DEFAULT_DOWNLOAD_PATH
 from lib.core import shared_variable

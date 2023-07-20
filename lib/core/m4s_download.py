@@ -1,6 +1,6 @@
 
 from lib.core.log import logger
-from lib.request.httprequest import request
+from lib.request.http_request import request
 
 from lib.core.files import newdir
 from lib.core.progressbar import get_progress_bar

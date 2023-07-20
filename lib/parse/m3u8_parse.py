@@ -5,7 +5,7 @@ import sys
 
 from lib.core.files import writeTextFile
 from lib.core.log import logger
-from lib.parse.urlParse import is_url
+from lib.parse.url_parse import is_url
 
 def getM3u8KeyUri(m3u8_content):
     pattern = r'#EXT-X-KEY:(METHOD=[^,]+),URI="([^"]+)"(?:,IV=([0-9A-Fa-f]+))?'

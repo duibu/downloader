@@ -3,7 +3,7 @@ import base64
 from Crypto.Cipher import AES
 from Crypto.Util import Padding
 from lib.core.log import logger
-from lib.request.httprequest import request
+from lib.request.http_request import request
 from lib.core.files import newdir
 
 def downloadm3u8(url):
