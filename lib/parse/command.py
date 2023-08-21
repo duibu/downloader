@@ -18,9 +18,6 @@ def cmdLineParser(argv=None):
     if not argv:
         argv = sys.argv
 
-    # Reference: https://stackoverflow.com/a/4012683 (Note: previously used "...sys.getfilesystemencoding() or UNICODE_ENCODING")
-    # _ = getUnicode(os.path.basename(argv[0]), encoding=sys.stdin.encoding)
-
     parser = ArgumentParser()
 
     try:
@@ -41,9 +38,6 @@ def cmdLineParser(argv=None):
 
         parser.add_argument("--thread", dest="thread", type = int, default = 1,
             help="Thread number  (e.g. \"5\")")
-
-        # parser.add_argument("--cookie", dest="http_cookie",
-        #     help="http request cookie header. (e.g. \"xxx:xxx;xxx:xxx\")")
 
         parser.add_argument("--proxy", nargs='*', dest="proxy",
             help="Network Agent configuration. (e.g. \"http='http://127.0.0.1:8080' https='https://127.0.0.1:8080'\")")
