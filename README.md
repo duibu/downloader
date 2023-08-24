@@ -1,7 +1,7 @@
 # 🌱 Downloader
 [![Python 3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-MIT-red.svg)](https://raw.githubusercontent.com/duibu/downloader/main/LICENSE) 
 
-```bash
+```
              @@                       
              @@                       
              @@     
