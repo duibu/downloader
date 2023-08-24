@@ -1,4 +1,4 @@
-# Downloader
+# 🌱 Downloader
 [![Python 3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-MIT-red.svg)](https://raw.githubusercontent.com/duibu/downloader/main/LICENSE) 
 
 ```bash
@@ -16,11 +16,11 @@
 
 本项目主要用于下载各种网站的视频，目前支持m3u8流媒体文件下载和b站视频下载(单个视频，番剧等还在努力开发中)，并且支持多线程下载，其他类型（或网站）视频的下载还在努力开发中......
 
-## 环境说明
+## 🏆 环境说明
 
 python:3.x
 
-## 安装
+## 🔧 安装
 
 使用git下载代码
 
@@ -34,7 +34,7 @@ git clone https://github.com/duibu/downloader.git
 pip install -r requirements.txt
 ```
 
-## 参数说明
+## 🚀 参数说明
 
 ```
 -u --url: 下载视频的url地址，只可以设置单个url
@@ -46,7 +46,7 @@ pip install -r requirements.txt
 --proxy: 配置代理信息，示例(clash for windows)：--proxy http=http://127.0.0.1:7890 https=http://127.0.0.1:7890
 ```
 
-## 使用示例
+## 🔨 使用示例
 
 ### 下载单个视频
 
@@ -113,7 +113,7 @@ python downloader.py --url 'https://www.bilibili.com/video/BV1DX4y1p7CT/' --thre
 
 
 
-## Q&A
+## ❓ Q&A
 
 1. 使用Clash for Windows科学上网之后提示网络异常
 
