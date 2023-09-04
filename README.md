@@ -130,3 +130,9 @@ python downloader.py --url 'https://www.bilibili.com/video/BV1DX4y1p7CT/' --thre
 4. 其他问题
 
    如果遇到其他问题，请提交 Issues，同时也欢迎您修复后合并。也欢迎多多提意见
+
+## ©️ License
+
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+Licensed under the [MIT](LICENSE) license.
